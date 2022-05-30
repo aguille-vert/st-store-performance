@@ -35,7 +35,7 @@ if wzn_file:
 					"Market item cost":"float",
 					"Quantity ordered":"float"
 					})
-	wzn["order_cost"]=wzn["Market item cost"]*wzn["Quantity ordered"]
+	wzn["order_cost"]=wzn["Market item cost"]
 
 
 	wzn.dropna(subset=["Amz order id"],inplace=True)
