@@ -38,26 +38,28 @@ if wzn_file:
 						})
 		wzn["order_cost"]=wzn["Market item cost"]*wzn["Quantity ordered"]
 
+
+
+
+		wzn.dropna(subset=["Amz order id"],inplace=True)
+		date_cols=["Order date","Latest ship date"]
+		for col in date_cols:
+			wzn[col]=wzn[col].str.extract("([0-9]+),*")
+			wzn[col]=wzn[col].astype("int64").apply(lambda x: datetime.fromtimestamp(x)).dt.strftime("%Y-%m-%d")
+
+		wzn.sort_values(by="Order date",ignore_index=True,inplace=True)
+		wzn.columns=wzn.columns.str.replace(" ","_").str.lower()
+		#st.dataframe(wzn)
+
+
+		st.subheader("Walzon shipped orders")
+		wzn_shipped=wzn.query("orderfulfillment_status=='Shipped'")
+		wzn_shipped.set_index("order_date",inplace=True)
+
+
+		st.dataframe(wzn_shipped)
+		st.markdown("**Chart 1. Payments for orders shipped**")
+		st.bar_chart(data=wzn_shipped[['order_cost']])
+
 	except:
 		st.write("failed to upload; please check that the file is excel or csv and if all required columns are in the file ")
-
-	wzn.dropna(subset=["Amz order id"],inplace=True)
-	date_cols=["Order date","Latest ship date"]
-	for col in date_cols:
-		wzn[col]=wzn[col].str.extract("([0-9]+),*")
-		wzn[col]=wzn[col].astype("int64").apply(lambda x: datetime.fromtimestamp(x)).dt.strftime("%Y-%m-%d")
-
-	wzn.sort_values(by="Order date",ignore_index=True,inplace=True)
-	wzn.columns=wzn.columns.str.replace(" ","_").str.lower()
-	#st.dataframe(wzn)
-
-
-	st.subheader("Walzon shipped orders")
-	wzn_shipped=wzn.query("orderfulfillment_status=='Shipped'")
-	wzn_shipped.set_index("order_date",inplace=True)
-
-
-	st.dataframe(wzn_shipped)
-	st.markdown("**Chart 1. Payments for orders shipped**")
-	st.bar_chart(data=wzn_shipped[['order_cost']])
-			
