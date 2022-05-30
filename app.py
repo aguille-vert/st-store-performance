@@ -119,5 +119,17 @@ if wzn_file:
 		 report were not included into Walzon report. 
 		""")
 
+	@st.cache
+	def convert_df(df):
+	     # IMPORTANT: Cache the conversion to prevent computation on every rerun
+	     return df.to_csv().encode('utf-8')
+	csv = convert_df(df_result)
+	st.download_button(
+     label="Download data as CSV",
+     data=csv,
+     file_name='df.csv',
+     mime='text/csv',
+ )
+
 	# except:
 	# 	st.write("failed to upload; please check that the file is excel or csv and if all required columns are in the file ")
