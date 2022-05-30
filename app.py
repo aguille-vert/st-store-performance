@@ -39,7 +39,6 @@ if wzn_file:
 					"Quantity ordered":"float"
 					})
 	wzn["order_cost"]=wzn["Market item cost"]*wzn["Quantity ordered"]
-	st.dataframe(wzn)
 
 
 	wzn.dropna(subset=["Amz order id"],inplace=True)
@@ -61,6 +60,18 @@ if wzn_file:
 	st.dataframe(wzn_shipped)
 	st.markdown("**Chart 1. Payments for orders shipped**")
 	st.bar_chart(data=wzn_shipped[['order_cost']])
+
+	capital_invested=st.text_input("Enter invested capital amount",value='15000')
+	capital_invested=int(capital_invested)
+
+	wzn_shipped["cum_cash_out"]=wzn_shipped['order_cost'].cumsum()
+	wzn_shipped["cash_balance"]=capital_invested-wzn_shipped["cum_cash_out"]
+
+	st.dataframe(wzn_shipped)
+	st.markdown("**Chart 2. Walzon cash balance**")
+	st.line_chart(data=wzn_shipped[['cash_balance']])
+	st.caption("""This chart includes only amounts paid for order purchases\n
+		Amounts received from Amazon and Funds returned will be included in the next release""")
 
 	# except:
 	# 	st.write("failed to upload; please check that the file is excel or csv and if all required columns are in the file ")
