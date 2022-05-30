@@ -100,7 +100,7 @@ if wzn_file:
 
 	st.dataframe(azn)
 
-	st.subheader("Profit from Operations")
+	st.subheader("Profit from Transactions")
 
 	df=azn.merge(wzn,on="amz_order_id",how="left")
 	df.rename(columns={"Total (USD)":"net_amz_payment",
