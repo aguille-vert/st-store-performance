@@ -92,7 +92,7 @@ if wzn_file:
 	  azn=pd.concat([azn,pd.read_csv(fn)])
 
 	azn.drop_duplicates(subset=['Order ID'],inplace=True)
-	azn.Date=pd.to_datetime(azn.Date).dt
+	azn.Date=pd.to_datetime(azn.Date)
 	azn.sort_values(by='Date',inplace=True,ascending=False,ignore_index=True)
 	azn.columns=azn.columns.str.replace(" ","_").str.lower()
 	azn['date']=azn.date.dt.strftime("%Y-%m-%d")
